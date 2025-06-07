@@ -1,0 +1,85 @@
+.file-browser {
+  width: 100%;
+}
+
+.file-browser-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.model-container {
+  width: 100%;
+  position: relative;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.5rem 0;
+}
+
+.file-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  width: 100%;
+}
+
+.file-input {
+  display: none;
+}
+
+.file-input-label {
+  background-color: #2c6291;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.file-input-label:hover {
+  background-color: #1e4b6e;
+}
+
+.selected-file {
+  font-size: 0.9rem;
+  color: #666;
+  word-break: break-all;
+  text-align: center;
+}
+
+.upload-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  width: fit-content;
+}
+
+.upload-button:hover {
+  background-color: #357abd;
+  transform: translateY(-1px);
+}
+
+.upload-button:active {
+  transform: translateY(0);
+}
+
+.upload-button.reupload {
+  background-color: #e74c3c;
+}
+
+.upload-button.reupload:hover {
+  background-color: #c0392b;
+} 
