@@ -1,22 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
 .quote-container {
+  padding: 20px;
+  font-family: 'Roboto', sans-serif;
   display: flex;
-  gap: 2rem;
+  gap: 20px;
   justify-content: center;
-  padding: 1rem;
   width: 100%;
 }
 
 .quote-card {
-  background-color: white;
+  background: white;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
-  width: 50%;
-  min-height: 80vh;
+  padding: 20px;
+  width: 65%;
 }
 
 .quote-card.quote-lines {
-  width: 25%;
+  width: 35%;
 }
 
 .quote-section {
@@ -24,7 +26,7 @@
   border: 1px solid #e9ecef;
   border-radius: 4px;
   padding: 1.5rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 24px;
 }
 
 .quote-section:last-child {
@@ -32,9 +34,38 @@
 }
 
 .quote-section h2 {
-  color: #2c6291;
-  margin: 0 0 1rem 0;
-  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  user-select: none;
+  margin: 0;
+  padding: 1rem;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+
+.quote-section h2:hover {
+  background-color: #e9e9e9;
+}
+
+.quote-section h2 .caret {
+  transition: transform 0.2s ease;
+  font-size: 0.8em;
+  color: #666;
+}
+
+.quote-section h2 .caret.collapsed {
+  transform: rotate(-90deg);
+}
+
+.quote-section-content {
+  padding: 1rem;
+  transition: all 0.3s ease;
+}
+
+.quote-section-content.collapsed {
+  display: none;
 }
 
 .model-card {
@@ -46,11 +77,34 @@
 }
 
 .model-card h3 {
-  color: #2c6291;
-  margin: 0 0 1rem 0;
+  color: #444;
+  margin: 0 0 12px 0;
   font-size: 1.1rem;
   font-weight: 500;
-} 
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.model-card h3 .caret {
+  display: inline-block;
+  transition: transform 0.3s ease;
+  font-size: 0.8rem;
+}
+
+.model-card h3 .caret.collapsed {
+  transform: rotate(-90deg);
+}
+
+.model-content {
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.model-content.collapsed {
+  display: none;
+}
 
 .part-card {
   background-color: white;
@@ -65,4 +119,212 @@
   margin: 0 0 1rem 0;
   font-size: 1.1rem;
   font-weight: 500;
+} 
+
+.input-group {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.input-group.horizontal {
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
+.input-group.horizontal .surface-area-input {
+  flex: 1;
+}
+
+.input-group.horizontal input[type="number"] {
+  width: 150px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 6px;
+  color: #555;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.input-group input,
+.input-group textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.95rem;
+  color: #333;
+  background: white;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-group input:focus,
+.input-group textarea:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+.input-group input::placeholder,
+.input-group textarea::placeholder {
+  color: #999;
+}
+
+.input-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.quote-lines {
+  background: #f8f9fa;
+}
+
+.prep-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.checkbox-group:hover {
+    background-color: #f5f5f5;
+}
+
+.checkbox-group input[type="checkbox"] {
+    margin: 0;
+}
+
+.checkbox-group label {
+    margin: 0;
+}
+
+.checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.surface-area-input {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    max-height: 0;
+    opacity: 0;
+    margin-left: 1.5rem;
+}
+
+.surface-area-input.expanded {
+    max-height: 50px;
+    opacity: 1;
+    margin-top: 0.5rem;
+}
+
+.surface-area-input input {
+    width: 250px;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.surface-area-input input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.surface-area-input .unit {
+    font-weight: 500;
+    color: #666;
+}
+
+.dimensions-group {
+    display: flex;
+    gap: 0;
+    padding: 1rem;
+    position: relative;
+}
+
+.dimension-input {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+    padding: 0 1rem;
+    position: relative;
+}
+
+.dimension-input:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: -1rem;
+    bottom: -1rem;
+    width: 1px;
+    background-color: #ddd;
+}
+
+.dimension-input:first-child {
+    padding-left: 0;
+}
+
+.dimension-input:last-child {
+    padding-right: 0;
+}
+
+.dimension-input label {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.input-with-unit {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.input-with-unit input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.input-with-unit input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.input-with-unit .unit {
+    font-weight: 500;
+    color: #666;
+    white-space: nowrap;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .quote-container {
+    padding: 10px;
+  }
+  
+  .quote-card {
+    padding: 15px;
+  }
 } 
