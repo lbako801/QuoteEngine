@@ -13,7 +13,7 @@ const useQuoteStore = create((set) => ({
     prepOptions: {
         polishing: { checked: false, surfaceArea: '' },
         gritBlasting: { checked: false, surfaceArea: '' },
-        masking: { checked: false, surfaceArea: '' }
+        masking: { checked: false, surfaceArea: '', holesCount: '' }
     },
 
     // Racking dimensions
@@ -26,9 +26,11 @@ const useQuoteStore = create((set) => ({
     // Section states
     sectionStates: {
         part: true,
-        prep: true,
-        racking: true,
-        quoteLines: true
+        prep: false,
+        racking: false,
+        plating: false,
+        quoteLines: true,
+        rackSimulator: true
     },
 
     // Actions
@@ -55,6 +57,16 @@ const useQuoteStore = create((set) => ({
             [option]: {
                 ...state.prepOptions[option],
                 surfaceArea: value
+            }
+        }
+    })),
+
+    setMaskingHolesCount: (value) => set((state) => ({
+        prepOptions: {
+            ...state.prepOptions,
+            masking: {
+                ...state.prepOptions.masking,
+                holesCount: value
             }
         }
     })),

@@ -1,7 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
 
 .quote-container {
-  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
   font-family: 'Roboto', sans-serif;
   display: flex;
   gap: 20px;
@@ -13,8 +15,8 @@
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  width: 65%;
+  margin-bottom: 2rem;
+  width: 100%;
 }
 
 .quote-card.quote-lines {
@@ -22,15 +24,12 @@
 }
 
 .quote-section {
-  background-color: #f8f9fa;
-  border: 1px solid #e9ecef;
-  border-radius: 4px;
+  border-bottom: 1px solid #eee;
   padding: 1.5rem;
-  margin-bottom: 24px;
 }
 
 .quote-section:last-child {
-  margin-bottom: 0;
+  border-bottom: none;
 }
 
 .quote-section h2 {
@@ -60,6 +59,8 @@
 }
 
 .quote-section-content {
+  margin-top: 1rem;
+  width: 100%;
   padding: 1rem;
   transition: all 0.3s ease;
 }
@@ -119,7 +120,7 @@
   margin: 0 0 1rem 0;
   font-size: 1.1rem;
   font-weight: 500;
-} 
+}
 
 .input-group {
   margin-bottom: 1rem;
@@ -134,8 +135,9 @@
   gap: 1rem;
 }
 
-.input-group.horizontal .surface-area-input {
+.input-group.horizontal .input-group {
   flex: 1;
+  margin-bottom: 0;
 }
 
 .input-group.horizontal input[type="number"] {
@@ -185,146 +187,193 @@
 }
 
 .prep-options {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .checkbox-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding: 0.5rem;
-    border-radius: 4px;
-    transition: background-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
 }
 
 .checkbox-group:hover {
-    background-color: #f5f5f5;
+  background-color: #f5f5f5;
 }
 
 .checkbox-group input[type="checkbox"] {
-    margin: 0;
+  margin: 0;
 }
 
 .checkbox-group label {
-    margin: 0;
+  margin: 0;
 }
 
 .checkbox-row {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
+/* Base surface area input styles */
 .surface-area-input {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    max-height: 0;
-    opacity: 0;
-    margin-left: 1.5rem;
-}
-
-.surface-area-input.expanded {
-    max-height: 50px;
-    opacity: 1;
-    margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
 }
 
 .surface-area-input input {
-    width: 250px;
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 0.9rem;
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.95rem;
 }
 
 .surface-area-input input:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
 .surface-area-input .unit {
-    font-weight: 500;
-    color: #666;
+  color: #666;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+/* Prep options specific surface area input styles */
+.prep-options .surface-area-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  max-width: 200px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  max-height: 0;
+  opacity: 0;
+  margin-left: 1.5rem;
+}
+
+.prep-options .surface-area-input.expanded {
+  max-height: 50px;
+  opacity: 1;
+  margin-top: 0.5rem;
+}
+
+.prep-options .surface-area-input input {
+  width: 120px;
 }
 
 .dimensions-group {
-    display: flex;
-    gap: 0;
-    padding: 1rem;
-    position: relative;
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  width: 100%;
 }
 
 .dimension-input {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    flex: 1;
-    padding: 0 1rem;
-    position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+  position: relative;
+  padding-right: 1rem;
 }
 
 .dimension-input:not(:last-child)::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: -1rem;
-    bottom: -1rem;
-    width: 1px;
-    background-color: #ddd;
-}
-
-.dimension-input:first-child {
-    padding-left: 0;
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 100%;
+  background-color: #ddd;
 }
 
 .dimension-input:last-child {
-    padding-right: 0;
-}
-
-.dimension-input label {
-    font-size: 0.9rem;
-    color: #666;
+  padding-right: 0;
 }
 
 .input-with-unit {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  min-width: 0;
 }
 
 .input-with-unit input {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 0.9rem;
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  min-width: 0;
+  width: 100%;
 }
 
-.input-with-unit input:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-}
-
-.input-with-unit .unit {
-    font-weight: 500;
-    color: #666;
-    white-space: nowrap;
-}
-
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .quote-container {
-    padding: 10px;
+    flex-direction: column;
   }
-  
+
   .quote-card {
-    padding: 15px;
+    width: 100%;
   }
-} 
+}
+
+.rack-simulator {
+  margin-top: 2rem;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.rack-container {
+  width: 31.5rem;
+  height: 19.5rem;
+  position: relative;
+}
+
+.rack-border {
+  width: 100%;
+  height: 100%;
+  border: 3px solid black;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+}
+
+.rack-wire {
+  width: 3px;
+  height: 100%;
+  background-color: red;
+  position: relative;
+}
+
+.quote-section.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.quote-section.disabled h2 {
+  cursor: not-allowed;
+}
+
+.section-hint {
+  font-size: 0.8rem;
+  color: #6c757d;
+  margin-left: 0.5rem;
+  font-weight: normal;
+}
