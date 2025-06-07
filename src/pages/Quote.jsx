@@ -2,7 +2,9 @@ import './Quote.css';
 import FileBrowser from '../components/FileBrowser';
 import RackSimulator from '../components/RackSimulator';
 import useQuoteStore from '../store/quoteStore';
-import { useState } from 'react';
+import useConfigStore from '../store/configStore';
+import { useState, useMemo } from 'react';
+import { calculateLaborTimes, calculateTotals } from '../utils/calculations';
 
 function Quote() {
     const {
@@ -24,6 +26,8 @@ function Quote() {
         removePlatingStep
     } = useQuoteStore();
 
+    const { config } = useConfigStore();
+
     const [totalsSectionStates, setTotalsSectionStates] = useState({
         labor: true,
         plating: true,
@@ -38,6 +42,31 @@ function Quote() {
     };
 
     const isPartInfoComplete = partData.name && partData.quantity > 0 && partData.surfaceArea > 0;
+
+    // Calculate labor times and costs
+    const laborResults = useMemo(() => {
+        if (!isPartInfoComplete) return null;
+        return calculateLaborTimes(partData, prepOptions, config);
+    }, [partData, prepOptions, config, isPartInfoComplete]);
+
+    // Calculate totals
+    const totals = useMemo(() => {
+        if (!laborResults) return null;
+        return calculateTotals(laborResults);
+    }, [laborResults]);
+
+    // Format currency
+    const formatCurrency = (amount) => {
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD'
+        }).format(amount);
+    };
+
+    // Format minutes
+    const formatMinutes = (minutes) => {
+        return minutes.toFixed(1);
+    };
 
     return (
         <div className="quote-container">
@@ -65,14 +94,15 @@ function Quote() {
 
                         <div className="part-card">
                             <div className="input-group">
-                                <label htmlFor="partName">Part Name:</label>
+                                <label htmlFor="partName">Part No.:</label>
                                 <input
                                     type="text"
                                     id="partName"
                                     name="partName"
-                                    placeholder="Enter part name"
+                                    placeholder="Enter part number"
                                     value={partData.name}
                                     onChange={(e) => setPartData('name', e.target.value)}
+                                    className="wide-input"
                                 />
                             </div>
 
@@ -84,6 +114,7 @@ function Quote() {
                                     placeholder="Enter part description"
                                     value={partData.description}
                                     onChange={(e) => setPartData('description', e.target.value)}
+                                    className="wide-input"
                                 />
                             </div>
 
@@ -372,47 +403,47 @@ function Quote() {
                                                 <div className="total-value">Per Qty</div>
                                             </div>
                                         </div>
-                                        {prepOptions.gritBlasting.checked && (
+                                        {prepOptions.gritBlasting.checked && laborResults && (
                                             <div className="total-item">
                                                 <div className="total-label">Grit Blasting</div>
                                                 <div className="total-columns">
-                                                    <div className="total-value">0</div>
-                                                    <div className="total-value">0</div>
-                                                    <div className="total-value">$0.00</div>
-                                                    <div className="total-value">$0.00</div>
+                                                    <div className="total-value">{formatMinutes(laborResults.gritBlasting.minutesPerPart)}</div>
+                                                    <div className="total-value">{formatMinutes(laborResults.gritBlasting.minutesPerQty)}</div>
+                                                    <div className="total-value">{formatCurrency(laborResults.gritBlasting.costPerPart)}</div>
+                                                    <div className="total-value">{formatCurrency(laborResults.gritBlasting.costPerQty)}</div>
                                                 </div>
                                             </div>
                                         )}
-                                        {prepOptions.masking.checked && (
+                                        {prepOptions.masking.checked && laborResults && (
                                             <div className="total-item">
                                                 <div className="total-label">Masking</div>
                                                 <div className="total-columns">
-                                                    <div className="total-value">0</div>
-                                                    <div className="total-value">0</div>
-                                                    <div className="total-value">$0.00</div>
-                                                    <div className="total-value">$0.00</div>
+                                                    <div className="total-value">{formatMinutes(laborResults.masking.minutesPerPart)}</div>
+                                                    <div className="total-value">{formatMinutes(laborResults.masking.minutesPerQty)}</div>
+                                                    <div className="total-value">{formatCurrency(laborResults.masking.costPerPart)}</div>
+                                                    <div className="total-value">{formatCurrency(laborResults.masking.costPerQty)}</div>
                                                 </div>
                                             </div>
                                         )}
-                                        {prepOptions.polishing.checked && (
+                                        {prepOptions.polishing.checked && laborResults && (
                                             <div className="total-item">
                                                 <div className="total-label">Polishing</div>
                                                 <div className="total-columns">
-                                                    <div className="total-value">0</div>
-                                                    <div className="total-value">0</div>
-                                                    <div className="total-value">$0.00</div>
-                                                    <div className="total-value">$0.00</div>
+                                                    <div className="total-value">{formatMinutes(laborResults.polishing.minutesPerPart)}</div>
+                                                    <div className="total-value">{formatMinutes(laborResults.polishing.minutesPerQty)}</div>
+                                                    <div className="total-value">{formatCurrency(laborResults.polishing.costPerPart)}</div>
+                                                    <div className="total-value">{formatCurrency(laborResults.polishing.costPerQty)}</div>
                                                 </div>
                                             </div>
                                         )}
-                                        {(prepOptions.gritBlasting.checked || prepOptions.masking.checked || prepOptions.polishing.checked) && (
+                                        {totals && (
                                             <div className="total-item total-subtotal">
                                                 <div className="total-label">Labor Subtotal</div>
                                                 <div className="total-columns">
-                                                    <div className="total-value">0</div>
-                                                    <div className="total-value">0</div>
-                                                    <div className="total-value">$0.00</div>
-                                                    <div className="total-value">$0.00</div>
+                                                    <div className="total-value">{formatMinutes(totals.minutesPerPart)}</div>
+                                                    <div className="total-value">{formatMinutes(totals.minutesPerQty)}</div>
+                                                    <div className="total-value">{formatCurrency(totals.costPerPart)}</div>
+                                                    <div className="total-value">{formatCurrency(totals.costPerQty)}</div>
                                                 </div>
                                             </div>
                                         )}
