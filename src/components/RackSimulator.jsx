@@ -215,19 +215,19 @@ const RackSimulator = ({ dimensions, partDimensions }) => {
                         step="0.25"
                     />
                 </div>
-                {!useWireCentering && (
-                    <div className="input-group">
-                        <label htmlFor="horizontalSpacing">Horizontal Spacing (in):</label>
-                        <input
-                            type="number"
-                            id="horizontalSpacing"
-                            value={horizontalSpacing}
-                            onChange={(e) => setHorizontalSpacing(Math.max(0.25, parseFloat(e.target.value) || 0.25))}
-                            min="0.25"
-                            step="0.25"
-                        />
-                    </div>
-                )}
+                <div className="input-group">
+                    <label htmlFor="horizontalSpacing">Horizontal Spacing (in):</label>
+                    <input
+                        type="number"
+                        id="horizontalSpacing"
+                        value={horizontalSpacing}
+                        onChange={(e) => setHorizontalSpacing(e.target.value)}
+                        min="0.25"
+                        step="0.25"
+                        disabled={useWireCentering}
+                        className={useWireCentering ? 'disabled' : ''}
+                    />
+                </div>
             </div>
             <canvas ref={canvasRef}></canvas>
         </div>

@@ -29,9 +29,13 @@ const useQuoteStore = create((set) => ({
         prep: false,
         racking: false,
         plating: false,
+        totals: true,
         quoteLines: true,
         rackSimulator: true
     },
+
+    // Plating steps
+    platingSteps: [],
 
     // Actions
     setPartData: (field, value) => set((state) => ({
@@ -83,7 +87,19 @@ const useQuoteStore = create((set) => ({
             ...state.sectionStates,
             [section]: !state.sectionStates[section]
         }
-    }))
+    })),
+
+    addPlatingStep: (step) => set((state) => ({
+        platingSteps: [...state.platingSteps, { id: Date.now(), type: step, order: state.platingSteps.length + 1 }]
+    })),
+
+    removePlatingStep: (stepId) => set((state) => ({
+        platingSteps: state.platingSteps.filter(step => step.id !== stepId)
+    })),
+
+    reorderPlatingSteps: (steps) => set((state) => ({
+        platingSteps: steps.map((step, index) => ({ ...step, order: index + 1 }))
+    })),
 }));
 
 export default useQuoteStore; 

@@ -2,6 +2,7 @@ import './Quote.css';
 import FileBrowser from '../components/FileBrowser';
 import RackSimulator from '../components/RackSimulator';
 import useQuoteStore from '../store/quoteStore';
+import { useState } from 'react';
 
 function Quote() {
     const {
@@ -17,8 +18,24 @@ function Quote() {
         toggleRackingOption,
         setRackingQuantity,
         rackingDimensions,
-        setRackingDimension
+        setRackingDimension,
+        platingSteps,
+        addPlatingStep,
+        removePlatingStep
     } = useQuoteStore();
+
+    const [totalsSectionStates, setTotalsSectionStates] = useState({
+        labor: true,
+        plating: true,
+        summary: true
+    });
+
+    const toggleTotalsSection = (section) => {
+        setTotalsSectionStates(prev => ({
+            ...prev,
+            [section]: !prev[section]
+        }));
+    };
 
     const isPartInfoComplete = partData.name && partData.quantity > 0 && partData.surfaceArea > 0;
 
@@ -27,17 +44,22 @@ function Quote() {
             <div className="quote-card">
                 <div className="quote-section">
                     <h2 onClick={() => toggleSection('part')}>
-                        <span className={`caret ${!sectionStates.part ? 'collapsed' : ''}`}>▼</span>
-                        Part
+                        <div className="section-header">
+                            <div>
+                                <span className={`caret ${!sectionStates.part ? 'collapsed' : ''}`}>▼</span>
+                                Part
+                            </div>
+                            <span className={`section-checkmark ${partData.name && partData.quantity > 0 && partData.surfaceArea > 0 ? 'visible' : ''}`}>✓</span>
+                        </div>
                     </h2>
                     <div className={`quote-section-content ${!sectionStates.part ? 'collapsed' : ''}`}>
-                        <div className="model-card">
+                    <div className="model-card">
                             <h3 onClick={() => toggleSection('model')}>
                                 <span className={`caret ${!sectionStates.model ? 'collapsed' : ''}`}>▼</span>
                                 Model
                             </h3>
                             <div className={`model-content ${!sectionStates.model ? 'collapsed' : ''}`}>
-                                <FileBrowser />
+                        <FileBrowser />
                             </div>
                         </div>
 
@@ -111,9 +133,14 @@ function Quote() {
 
                 <div className={`quote-section ${!isPartInfoComplete ? 'disabled' : ''}`}>
                     <h2 onClick={() => isPartInfoComplete && toggleSection('prep')}>
-                        <span className={`caret ${!sectionStates.prep ? 'collapsed' : ''}`}>▼</span>
-                        Prep
-                        {!isPartInfoComplete && <span className="section-hint">(Complete part info first)</span>}
+                        <div className="section-header">
+                            <div>
+                                <span className={`caret ${!sectionStates.prep ? 'collapsed' : ''}`}>▼</span>
+                                Prep
+                                {!isPartInfoComplete && <span className="section-hint">(Complete part info first)</span>}
+                            </div>
+                            <span className={`section-checkmark ${Object.values(prepOptions).some(option => option.checked && option.surfaceArea > 0) ? 'visible' : ''}`}>✓</span>
+                        </div>
                     </h2>
                     <div className={`quote-section-content ${!sectionStates.prep ? 'collapsed' : ''}`}>
                         <div className="prep-options">
@@ -205,9 +232,14 @@ function Quote() {
 
                 <div className={`quote-section ${!isPartInfoComplete ? 'disabled' : ''}`}>
                     <h2 onClick={() => isPartInfoComplete && toggleSection('racking')}>
-                        <span className={`caret ${!sectionStates.racking ? 'collapsed' : ''}`}>▼</span>
-                        Racking
-                        {!isPartInfoComplete && <span className="section-hint">(Complete part info first)</span>}
+                        <div className="section-header">
+                            <div>
+                                <span className={`caret ${!sectionStates.racking ? 'collapsed' : ''}`}>▼</span>
+                                Racking
+                                {!isPartInfoComplete && <span className="section-hint">(Complete part info first)</span>}
+                            </div>
+                            <span className={`section-checkmark ${rackingDimensions.width > 0 && rackingDimensions.height > 0 ? 'visible' : ''}`}>✓</span>
+                        </div>
                     </h2>
                     <div className={`quote-section-content ${!sectionStates.racking ? 'collapsed' : ''}`}>
                         <div className="dimensions-group">
@@ -261,13 +293,220 @@ function Quote() {
 
                 <div className={`quote-section ${!isPartInfoComplete ? 'disabled' : ''}`}>
                     <h2 onClick={() => isPartInfoComplete && toggleSection('plating')}>
-                        <span className={`caret ${!sectionStates.plating ? 'collapsed' : ''}`}>▼</span>
-                        Plating
-                        {!isPartInfoComplete && <span className="section-hint">(Complete part info first)</span>}
+                        <div className="section-header">
+                            <div>
+                                <span className={`caret ${!sectionStates.plating ? 'collapsed' : ''}`}>▼</span>
+                                Plating
+                                {!isPartInfoComplete && <span className="section-hint">(Complete part info first)</span>}
+                            </div>
+                            <span className={`section-checkmark ${platingSteps.length > 0 ? 'visible' : ''}`}>✓</span>
+                        </div>
                     </h2>
                     <div className={`quote-section-content ${!sectionStates.plating ? 'collapsed' : ''}`}>
                         <div className="plating-options">
-                            {/* Plating options will go here */}
+                            <div className="plating-steps">
+                                <div className="plating-steps-list">
+                                    {platingSteps.map((step, index) => (
+                                        <div key={step.id} className="plating-step">
+                                            <div className="step-number">{step.order}</div>
+                                            <div className="step-type">{step.type}</div>
+                                            <button 
+                                                className="remove-step"
+                                                onClick={() => removePlatingStep(step.id)}
+                                            >
+                                                ×
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className="add-step-controls">
+                                    <select 
+                                        className="step-type-select"
+                                        onChange={(e) => {
+                                            if (e.target.value) {
+                                                addPlatingStep(e.target.value);
+                                                e.target.value = '';
+                                            }
+                                        }}
+                                    >
+                                        <option value="">Add plating step...</option>
+                                        <option value="Gold">Gold</option>
+                                        <option value="Silver">Silver</option>
+                                        <option value="ENP">ENP</option>
+                                        <option value="Bright Nickel">Bright Nickel</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="quote-section">
+                    <h2 onClick={() => toggleSection('totals')}>
+                        <div className="section-header">
+                            <div>
+                                <span className={`caret ${!sectionStates.totals ? 'collapsed' : ''}`}>▼</span>
+                                Totals
+                            </div>
+                        </div>
+                    </h2>
+                    <div className={`quote-section-content ${!sectionStates.totals ? 'collapsed' : ''}`}>
+                        <div className="totals-container">
+                            <div className="totals-section">
+                                <h3 onClick={() => toggleTotalsSection('labor')}>
+                                    <div className="section-header">
+                                        <div>
+                                            <span className={`caret ${!totalsSectionStates.labor ? 'collapsed' : ''}`}>▼</span>
+                                            Labor Totals
+                                        </div>
+                                    </div>
+                                </h3>
+                                <div className={`totals-content ${!totalsSectionStates.labor ? 'collapsed' : ''}`}>
+                                    <div className="totals-grid">
+                                        <div className="total-header">
+                                            <div className="total-label"></div>
+                                            <div className="total-columns">
+                                                <div className="total-value">Minutes/Part</div>
+                                                <div className="total-value">Minutes/Qty</div>
+                                                <div className="total-value">Per Part</div>
+                                                <div className="total-value">Per Qty</div>
+                                            </div>
+                                        </div>
+                                        {prepOptions.gritBlasting.checked && (
+                                            <div className="total-item">
+                                                <div className="total-label">Grit Blasting</div>
+                                                <div className="total-columns">
+                                                    <div className="total-value">0</div>
+                                                    <div className="total-value">0</div>
+                                                    <div className="total-value">$0.00</div>
+                                                    <div className="total-value">$0.00</div>
+                                                </div>
+                                            </div>
+                                        )}
+                                        {prepOptions.masking.checked && (
+                                            <div className="total-item">
+                                                <div className="total-label">Masking</div>
+                                                <div className="total-columns">
+                                                    <div className="total-value">0</div>
+                                                    <div className="total-value">0</div>
+                                                    <div className="total-value">$0.00</div>
+                                                    <div className="total-value">$0.00</div>
+                                                </div>
+                                            </div>
+                                        )}
+                                        {prepOptions.polishing.checked && (
+                                            <div className="total-item">
+                                                <div className="total-label">Polishing</div>
+                                                <div className="total-columns">
+                                                    <div className="total-value">0</div>
+                                                    <div className="total-value">0</div>
+                                                    <div className="total-value">$0.00</div>
+                                                    <div className="total-value">$0.00</div>
+                                                </div>
+                                            </div>
+                                        )}
+                                        {(prepOptions.gritBlasting.checked || prepOptions.masking.checked || prepOptions.polishing.checked) && (
+                                            <div className="total-item total-subtotal">
+                                                <div className="total-label">Labor Subtotal</div>
+                                                <div className="total-columns">
+                                                    <div className="total-value">0</div>
+                                                    <div className="total-value">0</div>
+                                                    <div className="total-value">$0.00</div>
+                                                    <div className="total-value">$0.00</div>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="totals-section">
+                                <h3 onClick={() => toggleTotalsSection('plating')}>
+                                    <div className="section-header">
+                                        <div>
+                                            <span className={`caret ${!totalsSectionStates.plating ? 'collapsed' : ''}`}>▼</span>
+                                            Plating Totals
+                                        </div>
+                                    </div>
+                                </h3>
+                                <div className={`totals-content ${!totalsSectionStates.plating ? 'collapsed' : ''}`}>
+                                    <div className="totals-grid">
+                                        <div className="total-header">
+                                            <div className="total-label"></div>
+                                            <div className="total-columns">
+                                                <div className="total-value">Per Part</div>
+                                                <div className="total-value">Per Qty</div>
+                                            </div>
+                                        </div>
+                                        {platingSteps.map(step => (
+                                            <div key={step.id} className="total-item">
+                                                <div className="total-label">{step.type}</div>
+                                                <div className="total-columns">
+                                                    <div className="total-value">$0.00</div>
+                                                    <div className="total-value">$0.00</div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                        {platingSteps.length > 0 && (
+                                            <div className="total-item total-subtotal">
+                                                <div className="total-label">Plating Subtotal</div>
+                                                <div className="total-columns">
+                                                    <div className="total-value">$0.00</div>
+                                                    <div className="total-value">$0.00</div>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="totals-section">
+                                <h3 onClick={() => toggleTotalsSection('summary')}>
+                                    <div className="section-header">
+                                        <div>
+                                            <span className={`caret ${!totalsSectionStates.summary ? 'collapsed' : ''}`}>▼</span>
+                                            Summary
+                                        </div>
+                                    </div>
+                                </h3>
+                                <div className={`totals-content ${!totalsSectionStates.summary ? 'collapsed' : ''}`}>
+                                    <div className="totals-grid">
+                                        <div className="total-item">
+                                            <div className="total-label">Total Surface Area</div>
+                                            <div className="total-value">0.00 in²</div>
+                                        </div>
+                                        <div className="total-item">
+                                            <div className="total-label">Total Prep Area</div>
+                                            <div className="total-value">0.00 in²</div>
+                                        </div>
+                                        <div className="total-item">
+                                            <div className="total-label">Total Racks Needed</div>
+                                            <div className="total-value">0</div>
+                                        </div>
+                                        <div className="total-item">
+                                            <div className="total-label">Total Parts</div>
+                                            <div className="total-value">0</div>
+                                        </div>
+                                        <div className="total-header">
+                                            <div className="total-label"></div>
+                                            <div className="total-columns">
+                                                <div className="total-value">Per Part</div>
+                                                <div className="total-value">Per Qty</div>
+                                            </div>
+                                        </div>
+                                        <div className="total-item total-grand-total">
+                                            <div className="total-label">Grand Total</div>
+                                            <div className="total-columns">
+                                                <div className="total-value">$0.00</div>
+                                                <div className="total-value">$0.00</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="add-to-quote-container">
+                            <button className="add-to-quote-button">Add to Quote</button>
                         </div>
                     </div>
                 </div>
@@ -280,7 +519,7 @@ function Quote() {
                         Quote Lines
                     </h2>
                     <div className={`quote-section-content ${!sectionStates.quoteLines ? 'collapsed' : ''}`}>
-                        {/* Quote lines will go here */}
+                    {/* Quote lines will go here */}
                     </div>
                 </div>
             </div>
